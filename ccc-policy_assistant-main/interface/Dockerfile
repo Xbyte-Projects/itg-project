@@ -1,10 +1,10 @@
-# Use the official Streamlit image
+# Use the official Python image
 FROM python:3.11
 
 # Set the working directory
 WORKDIR /app
 
-# Copy the requirements file
+# Copy requirements first for better caching
 COPY requirements.txt ./requirements.txt
 
 # Install dependencies
@@ -14,9 +14,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy the rest of the app code
 COPY . .
 
-# Set the GOOGLE_APPLICATION_CREDENTIALS environment variable
-# This tells Google Cloud client libraries where to find your service account key.
-ENV GOOGLE_APPLICATION_CREDENTIALS="/app/eternal-bongo-435614-b9-0127167e0d20.json"
+# Do NOT copy the credentials; we'll mount them at runtime
 
 # Run the Streamlit app
-CMD ["streamlit", "run", "app.py", "--server.port=8081", "--server.address=0.0.0.0"]
+CMD ["streamlit", "run", "app.py", "--server.port=8080", "--server.address=0.0.0.0"]
